@@ -1,11 +1,14 @@
 <?php
 include 'db_connect.php';
 
-$result = $conn->query("SELECT ong_id, ong_nome, ong_area_atuacao, aprovado FROM tb_ong");
-$ongs = [];
+$sql = "SELECT ong_id, ong_nome, ong_area_atuacao FROM tb_ong WHERE aprovado = 1";
+$result = $conn->query($sql);
 
-while ($row = $result->fetch_assoc()) {
-    $ongs[] = $row;
+$ongs = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $ongs[] = $row;
+    }
 }
 
 header('Content-Type: application/json');

@@ -17,15 +17,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         $ong = $result->fetch_assoc();
+        if ($ong['aprovado'] == 0) {
+            die("Sua ONG ainda não foi aprovada pelo administrador.");
+        }
         if (password_verify($senha, $ong['senha'])) {
-            if ($ong['aprovado'] == 1) {
-                $_SESSION['user_id'] = $ong['ong_id'];
-                $_SESSION['user_type'] = 'ong';
-                header("Location: publicacao_ong.php");
-                exit();
-            } else {
-                echo "Sua conta ainda não foi aprovada pelo administrador.";
-            }
+            $_SESSION['user_id'] = $ong['ong_id'];
+            $_SESSION['user_type'] = 'ong';
+            header("Location: /kindact/main/publicacao_ong.php");
+            exit();
         } else {
             echo "Senha incorreta.";
         }

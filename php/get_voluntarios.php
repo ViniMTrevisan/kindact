@@ -1,11 +1,14 @@
 <?php
 include 'db_connect.php';
 
-$result = $conn->query("SELECT voluntario_id, voluntario_nome, voluntario_cidade FROM tb_voluntario");
-$voluntarios = [];
+$sql = "SELECT voluntario_id, voluntario_nome, voluntario_email FROM tb_voluntario";
+$result = $conn->query($sql);
 
-while ($row = $result->fetch_assoc()) {
-    $voluntarios[] = $row;
+$voluntarios = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $voluntarios[] = $row;
+    }
 }
 
 header('Content-Type: application/json');

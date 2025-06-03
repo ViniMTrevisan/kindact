@@ -4,38 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <title>Aprovar ONG - Admin</title>
+    <link rel="stylesheet" href="/kindact/css/style.css">
+    <title>Aprovar ONG</title>
 </head>
 <body>
-    <a href="aprovacao_admin.php" class="back-link" aria-label="Voltar para a página anterior">< Voltar</a>
+    <a href="/kindact/main/aprovacao_admin.php" class="back-link" aria-label="Voltar para a aprovação de ONGs">< Voltar</a>
     <div class="container">
         <header class="header">
-            <a href="index.html" class="logo">KindAct</a>
-            <a href="logout.php" class="logout-link">Sair</a>
-            <span class="user-type">Admin</span>
+            <a href="/kindact/main/index.html" class="logo">KindAct</a>
         </header>
         <main>
-            <h2>Aprovar ONG</h2>
-            <section class="aprovar">
-                <h3>Detalhes da ONG</h3>
-                <p><strong>Nome:</strong> [Nome da ONG]</p>
-                <p><strong>Área de Atuação:</strong> [Área de Atuação]</p>
-                <form action="aprovar_ong.php?ong_id=<?php echo isset($_GET['ong_id']) ? (int)$_GET['ong_id'] : 0; ?>" method="post">
-                    <button type="submit" name="action" value="Aprovar" class="btn">Aprovar</button>
-                    <button type="submit" name="action" value="Rejeitar" class="btn btn-secondary">Rejeitar</button>
-                </form>
-            </section>
+            <h2>Confirmar Aprovação de ONG</h2>
+            <p>Você está prestes a aprovar a ONG [Nome da ONG]. Deseja confirmar?</p>
+            <form action="/kindact/php/aprovar_ong.php" method="post">
+                <input type="hidden" name="ong_id" id="ong_id">
+                <button type="submit" class="btn btn-primary">Aprovar ONG</button>
+            </form>
         </main>
         <footer class="footer">
             <p class="footer-brand">KindAct</p>
             <p class="footer-text">Juntos, podemos fazer a diferença. Conecte-se, colabore e transforme!</p>
             <div class="footer-links">
-                <a href="termos.html" class="footer-link">Termos</a>
-                <a href="politica_privacidade.html" class="footer-link">Política de Privacidade</a>
+                <a href="/kindact/main/termos.html" class="footer-link">Termos</a>
+                <a href="/kindact/main/politica_privacidade.html" class="footer-link">Política de Privacidade</a>
             </div>
         </footer>
     </div>
-    <script src="/js/script.js"></script>
+    <script src="/kindact/js/script.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const ongId = urlParams.get('ong_id');
+        document.getElementById('ong_id').value = ongId;
+    </script>
 </body>
 </html>

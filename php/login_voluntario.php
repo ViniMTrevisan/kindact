@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($senha, $voluntario['senha'])) {
             $_SESSION['user_id'] = $voluntario['voluntario_id'];
             $_SESSION['user_type'] = 'voluntario';
-            header("Location: usuario.html");
+            header("Location: /kindact/main/usuario.html");
             exit();
         } else {
             echo "Senha incorreta.";

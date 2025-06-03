@@ -1,29 +1,35 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'voluntario') {
+    header("Location: /kindact/main/login_voluntario.html");
+    exit();
+}
+
 include 'db_connect.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'voluntario') {
-    header("Location: login_voluntario.html");
-    exit();
-}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $voluntario_id = $_SESSION['user_id'];
+    $ong_id = $_POST['ong_id'] ?? '';
 
-$ong_id = isset($_GET['ong_id']) ? (int)$_GET['ong_id'] : 0;
-$voluntario_id = $_SESSION['user_id'];
+    if (empty($ong_id)) {
+        die("ID da ONG não fornecido.");
+    }
 
-if ($ong_id <= 0) {
-    die("Invalid ONG ID.");
-}
+    $stmt = $conn->prepare("INSERT INTO tb_candidatura (fk_voluntario_id, fk_ong_id, status) VALUES (?, ?, 'pendente')");
+    $stmt->bind_param("ii", $voluntario_id, $ong_id);
 
-$stmt = $conn->prepare("INSERT INTO tb_candidatura (fk_voluntario_id, fk_ong_id, candidatura_data) VALUES (?, ?, NOW())");
-$stmt->bind_param("ii", $voluntario_id, $ong_id);
+    if ($stmt->execute()) {
+        echo "Candidatura enviada com sucesso!";
+        header("Location: /kindact/main/usuario.html");
+        exit();
+    } else {
+        echo "Erro ao enviar candidatura.";
+    }
 
-if ($stmt->execute()) {
-    header("Location: usuario.html");
-    exit();
+    $stmt->close();
 } else {
-    echo "Error: " . $stmt->error;
+    http_response_code(405);
+    echo "Método não permitido. Use POST.";
 }
-
-$stmt->close();
 $conn->close();
 ?>

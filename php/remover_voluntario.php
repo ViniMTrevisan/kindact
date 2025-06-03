@@ -1,26 +1,26 @@
 <?php
 session_start();
-include 'db_connect.php';
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: login_admin.html");
+    header("Location: /kindact/main/login_admin.html");
     exit();
 }
 
-$voluntario_id = isset($_GET['voluntario_id']) ? (int)$_GET['voluntario_id'] : 0;
+include 'db_connect.php';
 
-if ($voluntario_id <= 0) {
-    die("Invalid volunteer ID.");
+$voluntario_id = $_GET['voluntario_id'] ?? '';
+
+if (empty($voluntario_id)) {
+    die("ID do voluntário não fornecido.");
 }
 
 $stmt = $conn->prepare("DELETE FROM tb_voluntario WHERE voluntario_id = ?");
 $stmt->bind_param("i", $voluntario_id);
 
 if ($stmt->execute()) {
-    header("Location: aprovacao_admin.php");
+    header("Location: /kindact/main/aprovacao_admin.php");
     exit();
 } else {
-    echo "Error: " . $stmt->error;
+    echo "Erro ao remover voluntário.";
 }
 
 $stmt->close();

@@ -2,34 +2,36 @@
 include 'db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $ong_nome = $_POST['name'];
-    $ong_cnpj = $_POST['cnpj'];
-    $ong_telefone = $_POST['phone'];
-    $ong_email = $_POST['email'];
-    $ong_cep = $_POST['cep'];
-    $ong_endereco = $_POST['address'];
-    $ong_senha = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $nome = $_POST['nome'] ?? '';
+    $cnpj = $_POST['cnpj'] ?? '';
+    $telefone = $_POST['telefone'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $cep = $_POST['cep'] ?? '';
+    $endereco = $_POST['endereco'] ?? '';
+    $area_atuacao = $_POST['area_atuacao'] ?? '';
+    $senha = $_POST['password'] ?? '';
 
-    $ong_logradouro = $ong_endereco;
-    $ong_numero = '';
-    $ong_bairro = '';
-    $ong_complemento = '';
-    $ong_cidade = '';
-    $ong_uf = '';
-    $ong_area_atuacao = '';
-    $aprovado = 0;
+    if (empty($nome) || empty($cnpj) || empty($telefone) || empty($email) || empty($cep) || empty($endereco) || empty($senha)) {
+        die("Todos os campos obrigatórios devem ser preenchidos.");
+    }
 
-    $stmt = $conn->prepare("INSERT INTO tb_ong (ong_nome, ong_cnpj, ong_telefone, ong_email, ong_cep, ong_endereco, ong_logradouro, ong_numero, ong_bairro, ong_complemento, ong_cidade, ong_uf, ong_area_atuacao, senha, aprovado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssssssssi", $ong_nome, $ong_cnpj, $ong_telefone, $ong_email, $ong_cep, $ong_endereco, $ong_logradouro, $ong_numero, $ong_bairro, $ong_complemento, $ong_cidade, $ong_uf, $ong_area_atuacao, $ong_senha, $aprovado);
+    $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+
+    $stmt = $conn->prepare("INSERT INTO tb_ong (ong_nome, ong_cnpj, ong_telefone, ong_email, ong_cep, ong_endereco, ong_area_atuacao, senha, aprovado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+    $stmt->bind_param("ssssssss", $nome, $cnpj, $telefone, $email, $cep, $endereco, $area_atuacao, $senha_hash);
 
     if ($stmt->execute()) {
-        header("Location: login_ong.html");
+        echo "ONG cadastrada com sucesso! Aguardando aprovação.";
+        header("Location: /kindact/main/login_ong.html");
         exit();
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Erro ao cadastrar ONG.";
     }
 
     $stmt->close();
+} else {
+    http_response_code(405);
+    echo "Método não permitido. Use POST.";
 }
 $conn->close();
 ?>

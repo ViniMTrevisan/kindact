@@ -1,21 +1,17 @@
 <?php
 session_start();
-include 'db_connect.php';
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: login_admin.html");
+    header("Location: /kindact/main/login_admin.html");
     exit();
 }
 
-$ongs = json_decode(file_get_contents('get_ongs.php'), true);
-if (!$ongs) {
-    $ongs = [];
-}
+include '../php/db_connect.php';
 
-$voluntarios = json_decode(file_get_contents('get_voluntarios.php'), true);
-if (!$voluntarios) {
-    $voluntarios = [];
-}
+$ong_sql = "SELECT ong_id, ong_nome, ong_email, ong_cnpj, ong_area_atuacao FROM tb_ong WHERE aprovado = 0";
+$ong_result = $conn->query($ong_sql);
+
+$voluntario_sql = "SELECT voluntario_id, voluntario_nome, voluntario_email FROM tb_voluntario";
+$voluntario_result = $conn->query($voluntario_sql);
 ?>
 
 <!DOCTYPE html>
@@ -24,64 +20,62 @@ if (!$voluntarios) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/kindact/css/style.css">
     <title>Aprovação - Admin</title>
 </head>
 <body>
-    <a href="admin_tela.html" class="back-link" aria-label="Voltar para a página anterior">< Voltar</a>
+    <a href="/kindact/main/admin_tela.html" class="back-link" aria-label="Voltar para a tela admin">< Voltar</a>
     <div class="container">
         <header class="header">
-            <a href="index.html" class="logo">KindAct</a>
-            <a href="logout.php" class="logout-link">Sair</a>
-            <span class="user-type">Admin</span>
+            <a href="/kindact/main/index.html" class="logo">KindAct</a>
         </header>
         <main>
-            <h2>Aprovação de Cadastros</h2>
-            <section class="aprovar">
-                <h3>ONGs Pendentes</h3>
+            <h2>Aprovar ONGs</h2>
+            <?php if ($ong_result->num_rows > 0): ?>
                 <ul class="ong-list">
-                    <?php if (empty($ongs)): ?>
-                        <li><p>Nenhuma ONG pendente.</p></li>
-                    <?php else: ?>
-                        <?php foreach ($ongs as $ong): ?>
-                            <?php if (!$ong['aprovado']): ?>
-                                <li class="ong-item">
-                                    <h3><?php echo htmlspecialchars($ong['ong_nome']); ?></h3>
-                                    <p>Área de Atuação: <?php echo htmlspecialchars($ong['ong_area_atuacao'] ?: 'Não informado'); ?></p>
-                                    <a href="aprovar_ong.html?ong_id=<?php echo (int)$ong['ong_id']; ?>" class="btn">Aprovar ONG</a>
-                                    <a href="remover_ong.php?ong_id=<?php echo (int)$ong['ong_id']; ?>" class="btn btn-secondary remover">Remover ONG</a>
-                                </li>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php while ($row = $ong_result->fetch_assoc()): ?>
+                        <li class="ong-item">
+                            <h3><?php echo htmlspecialchars($row['ong_nome']); ?></h3>
+                            <p>Email: <?php echo htmlspecialchars($row['ong_email']); ?></p>
+                            <p>CNPJ: <?php echo htmlspecialchars($row['ong_cnpj']); ?></p>
+                            <p>Área de Atuação: <?php echo htmlspecialchars($row['ong_area_atuacao']); ?></p>
+                            <a href="/kindact/main/aprovar_ong.html?ong_id=<?php echo $row['ong_id']; ?>" class="btn btn-primary">Aprovar</a>
+                            <a href="/kindact/php/remover_ong.php?ong_id=<?php echo $row['ong_id']; ?>" class="btn btn-danger">Remover</a>
+                        </li>
+                    <?php endwhile; ?>
                 </ul>
-            </section>
-            <section class="remover">
-                <h3>Voluntários</h3>
+            <?php else: ?>
+                <p>Nenhuma ONG pendente de aprovação.</p>
+            <?php endif; ?>
+
+            <h2>Gerenciar Voluntários</h2>
+            <?php if ($voluntario_result->num_rows > 0): ?>
                 <ul class="voluntario-list">
-                    <?php if (empty($voluntarios)): ?>
-                        <li><p>Nenhum voluntário disponível.</p></li>
-                    <?php else: ?>
-                        <?php foreach ($voluntarios as $voluntario): ?>
-                            <li>
-                                <h3><?php echo htmlspecialchars($voluntario['voluntario_nome']); ?></h3>
-                                <p>Cidade: <?php echo htmlspecialchars($voluntario['voluntario_cidade'] ?: 'Não informado'); ?></p>
-                                <a href="remover_voluntario.php?voluntario_id=<?php echo (int)$voluntario['voluntario_id']; ?>" class="btn btn-secondary remover">Remover Voluntário</a>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php while ($row = $voluntario_result->fetch_assoc()): ?>
+                        <li class="voluntario-item">
+                            <h3><?php echo htmlspecialchars($row['voluntario_nome']); ?></h3>
+                            <p>Email: <?php echo htmlspecialchars($row['voluntario_email']); ?></p>
+                            <a href="/kindact/php/remover_voluntario.php?voluntario_id=<?php echo $row['voluntario_id']; ?>" class="btn btn-danger">Remover</a>
+                        </li>
+                    <?php endwhile; ?>
                 </ul>
-            </section>
+            <?php else: ?>
+                <p>Nenhum voluntário encontrado.</p>
+            <?php endif; ?>
         </main>
         <footer class="footer">
             <p class="footer-brand">KindAct</p>
             <p class="footer-text">Juntos, podemos fazer a diferença. Conecte-se, colabore e transforme!</p>
             <div class="footer-links">
-                <a href="termos.html" class="footer-link">Termos</a>
-                <a href="politica_privacidade.html" class="footer-link">Política de Privacidade</a>
+                <a href="/kindact/main/termos.html" class="footer-link">Termos</a>
+                <a href="/kindact/main/politica_privacidade.html" class="footer-link">Política de Privacidade</a>
             </div>
         </footer>
     </div>
-    <script src="/js/script.js"></script>
+    <script src="/kindact/js/script.js"></script>
 </body>
 </html>
+
+<?php
+$conn->close();
+?>

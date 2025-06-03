@@ -4,33 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <title>Envio - Voluntário</title>
+    <link rel="stylesheet" href="/kindact/css/style.css">
+    <title>Confirmação de Candidatura</title>
 </head>
 <body>
-    <a href="voluntarios_selecionando_ongs.php" class="back-link" aria-label="Voltar para a página anterior">< Voltar</a>
+    <a href="/kindact/main/voluntarios_selecionando_ongs.php" class="back-link" aria-label="Voltar para a seleção de ONGs">< Voltar</a>
     <div class="container">
         <header class="header">
-            <a href="index.html" class="logo">KindAct</a>
-            <a href="logout.php" class="logout-link">Sair</a>
+            <a href="/kindact/main/index.html" class="logo">KindAct</a>
         </header>
         <main>
-            <h2>Confirmação de Voluntariado</h2>
-            <section class="envio">
-                <h3>Você selecionou uma ONG!</h3>
-                <p>Deseja confirmar sua candidatura para esta ONG?</p>
-                <a href="envio.php?ong_id=<?php echo isset($_GET['ong_id']) ? (int)$_GET['ong_id'] : 0; ?>" class="btn">Confirmar</a>
-            </section>
+            <h2>Confirmação de Candidatura</h2>
+            <p>Você está se candidatando para a ONG selecionada. Deseja confirmar?</p>
+            <form action="/kindact/php/envio.php" method="post">
+                <input type="hidden" name="ong_id" id="ong_id">
+                <button type="submit" class="btn btn-primary">Confirmar Candidatura</button>
+            </form>
         </main>
         <footer class="footer">
             <p class="footer-brand">KindAct</p>
             <p class="footer-text">Juntos, podemos fazer a diferença. Conecte-se, colabore e transforme!</p>
             <div class="footer-links">
-                <a href="termos.html" class="footer-link">Termos</a>
-                <a href="politica_privacidade.html" class="footer-link">Política de Privacidade</a>
+                <a href="/kindact/main/termos.html" class="footer-link">Termos</a>
+                <a href="/kindact/main/politica_privacidade.html" class="footer-link">Política de Privacidade</a>
             </div>
         </footer>
     </div>
-    <script src="/js/script.js"></script>
+    <script src="/kindact/js/script.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const ongId = urlParams.get('ong_id');
+        document.getElementById('ong_id').value = ongId;
+    </script>
 </body>
 </html>

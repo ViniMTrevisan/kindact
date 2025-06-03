@@ -1,12 +1,23 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const sections = document.querySelectorAll(".about h2, .tela h2, .ajudar h2, .publicar h3, .analisar h3");
-    sections.forEach(section => {
-        section.addEventListener("click", function() {
-            const content = this.nextElementSibling;
-            content.style.display = content.style.display === "none" ? "block" : "none";
-        });
+    // expande e recolhe seções de informações
+    const sections = document.querySelectorAll(".about, .tela, .ajudar");
+    sections.forEach(function(section) {
+        const content = section.querySelector("p, ul");
+        if (content) {
+            content.style.display = "none";
+            section.addEventListener("click", function() {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                    section.classList.add("expanded");
+                } else {
+                    content.style.display = "none";
+                    section.classList.remove("expanded");
+                }
+            });
+        }
     });
 
+// Valida os Formulários
     const forms = document.querySelectorAll("form");
     forms.forEach(form => {
         form.addEventListener("submit", function(event) {
@@ -28,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
-
+//confirma a remoção de itens
     const removeButtons = document.querySelectorAll(".remover");
     removeButtons.forEach(button => {
         button.addEventListener("click", function(event) {
@@ -37,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
-
+// barra de pesquisa para ONGs
     const ongList = document.querySelector(".ong-list");
     if (ongList) {
         const searchInput = document.createElement("input");

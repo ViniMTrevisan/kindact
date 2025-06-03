@@ -1,36 +1,33 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    header("Location: /kindact/main/login_admin.html");
+    exit();
+}
+
 include 'db_connect.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: login_admin.html");
-    exit();
-}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $ong_id = $_POST['ong_id'] ?? '';
 
-$ong_id = isset($_GET['ong_id']) ? (int)$_GET['ong_id'] : 0;
-$action = $_POST['action'] ?? '';
+    if (empty($ong_id)) {
+        die("ID da ONG não fornecido.");
+    }
 
-if ($ong_id <= 0) {
-    die("Invalid ONG ID.");
-}
-
-if ($action === "Aprovar") {
     $stmt = $conn->prepare("UPDATE tb_ong SET aprovado = 1 WHERE ong_id = ?");
     $stmt->bind_param("i", $ong_id);
-} elseif ($action === "Rejeitar") {
-    $stmt = $conn->prepare("DELETE FROM tb_ong WHERE ong_id = ?");
-    $stmt->bind_param("i", $ong_id);
-} else {
-    die("Invalid action.");
-}
 
-if ($stmt->execute()) {
-    header("Location: aprovacao_admin.php");
-    exit();
-} else {
-    echo "Error: " . $stmt->error;
-}
+    if ($stmt->execute()) {
+        header("Location: /kindact/main/aprovacao_admin.php");
+        exit();
+    } else {
+        echo "Erro ao aprovar ONG.";
+    }
 
-$stmt->close();
+    $stmt->close();
+} else {
+    http_response_code(405);
+    echo "Método não permitido. Use POST.";
+}
 $conn->close();
 ?>
