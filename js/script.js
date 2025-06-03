@@ -1,4 +1,3 @@
-// Toggle sections on click (e.g., in index.html, usuario.html)
 document.addEventListener("DOMContentLoaded", function() {
     const sections = document.querySelectorAll(".about h2, .tela h2, .ajudar h2, .publicar h3, .analisar h3");
     sections.forEach(section => {
@@ -8,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Form validation
     const forms = document.querySelectorAll("form");
     forms.forEach(form => {
         form.addEventListener("submit", function(event) {
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Confirmation prompts for removal actions
     const removeButtons = document.querySelectorAll(".remover");
     removeButtons.forEach(button => {
         button.addEventListener("click", function(event) {
@@ -41,7 +38,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Search filter for ONG list (in voluntarios_selecionando_ongs.php)
     const ongList = document.querySelector(".ong-list");
     if (ongList) {
         const searchInput = document.createElement("input");
