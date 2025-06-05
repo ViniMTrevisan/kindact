@@ -2,7 +2,6 @@
 session_start();
 include 'db_connect.php';
 
-// Verificar conexão com o banco de dados
 if ($conn->connect_error) {
     header("Location: /kindact/main/login_admin.html?message=Erro%20de%20conexão%20com%20o%20banco%20de%20dados.");
     exit();
