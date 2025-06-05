@@ -6,17 +6,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/kindact/css/style.css?v=1.0">
     <link rel="icon" type="image/x-icon" href="/kindact/favicon.ico">
-    <title>Login - Administrador</title>
+    <title>Cadastro - Administrador</title>
 </head>
 <body>
-    <a href="/kindact/main/index.html" class="back-link" aria-label="Voltar para a página inicial">< Voltar</a>
+    <a href="/kindact/main/login_admin.html" class="back-link" aria-label="Voltar para o login de administrador">< Voltar</a>
     <div class="container">
         <header class="header">
             <a href="/kindact/main/index.html" class="logo">KindAct</a>
         </header>
         <main>
-            <h2>Login de Administrador</h2>
-            <form action="/kindact/php/login_admin.php" method="post">
+            <h2>Cadastro de Administrador</h2>
+            <form action="/kindact/php/cadastro_admin.php" method="post">
                 <div class="form-group">
                     <label for="email">Email *</label>
                     <input type="email" id="email" name="email" required>
@@ -25,9 +25,8 @@
                     <label for="password">Senha *</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Entrar</button>
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
             </form>
-            <p style="margin-top: 15px;">Não tem uma conta? <a href="/kindact/main/cadastro_admin.html" class="back-link">Cadastre-se aqui</a>.</p>
         </main>
         <footer class="footer">
             <p class="footer-brand">KindAct</p>
