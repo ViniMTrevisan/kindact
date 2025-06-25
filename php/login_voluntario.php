@@ -10,14 +10,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Email e senha são obrigatórios.");
     }
 
-    $stmt = $conn->prepare("SELECT voluntario_id, senha FROM tb_voluntario WHERE voluntario_email = ?");
+    $stmt = $conn->prepare("SELECT voluntario_id, voluntario_senha FROM tb_voluntario WHERE voluntario_email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $voluntario = $result->fetch_assoc();
-        if (password_verify($senha, $voluntario['senha'])) {
+        if (password_verify($senha, $voluntario['voluntario_senha'])) {
             $_SESSION['user_id'] = $voluntario['voluntario_id'];
             $_SESSION['user_type'] = 'voluntario';
             header("Location: /kindact/main/usuario.html");

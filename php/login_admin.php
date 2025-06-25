@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
-        $stmt = $conn->prepare("SELECT admin_id, senha FROM tb_admin WHERE admin_email = ?");
+        $stmt = $conn->prepare("SELECT admin_id, admin_senha FROM tb_admin WHERE admin_email = ?");
         if (!$stmt) {
             throw new Exception("Erro ao preparar a consulta.");
         }
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($result->num_rows > 0) {
             $admin = $result->fetch_assoc();
-            if (password_verify($senha, $admin['senha'])) {
+            if (password_verify($senha, $admin['admin_senha'])) {
                 $_SESSION['user_id'] = $admin['admin_id'];
                 $_SESSION['user_type'] = 'admin';
                 header("Location: /kindact/main/admin_tela.html");
