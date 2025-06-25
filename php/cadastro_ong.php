@@ -1,5 +1,7 @@
 <?php
 include 'db_connect.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST['nome'] ?? '';
@@ -17,7 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO tb_ong (ong_nome, ong_cnpj, ong_telefone, ong_email, ong_cep, ong_endereco, ong_area_atuacao, senha, aprovado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+    $stmt = $conn->prepare("INSERT INTO tb_ong 
+    (ong_nome, ong_cnpj, ong_telefone, ong_email, ong_cep, ong_endereco, ong_area_atuacao, ong_senha) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssss", $nome, $cnpj, $telefone, $email, $cep, $endereco, $area_atuacao, $senha_hash);
+
+
     $stmt->bind_param("ssssssss", $nome, $cnpj, $telefone, $email, $cep, $endereco, $area_atuacao, $senha_hash);
 
     if ($stmt->execute()) {
