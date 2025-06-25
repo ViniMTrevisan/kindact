@@ -43,9 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($result->num_rows > 0) {
             $stmt->close();
+            $stmt = null;
             header("Location: /kindact/main/cadastro_admin.html?message=Email%20já%20cadastrado.");
             exit();
-        }
+        }       
         $stmt->close();
 
         // Hash da senha
@@ -55,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Inserir o novo administrador (usando 'senha')
-        $stmt = $conn->prepare("INSERT INTO tb_admin (admin_email, senha) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO tb_admin (admin_email, admin_senha) VALUES (?, ?)");
         if (!$stmt) {
             throw new Exception("Erro ao preparar a consulta de inserção: " . $conn->error);
         }
@@ -69,9 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: /kindact/main/login_admin.html?message=Administrador%20cadastrado%20com%20sucesso!");
         exit();
     } catch (Exception $e) {
-        if (isset($stmt)) {
+        if (isset($stmt) && $stmt instanceof mysqli_stmt) {
             $stmt->close();
-        }
+        }   
         die("Erro: " . $e->getMessage());
     }
 } else {
