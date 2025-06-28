@@ -109,3 +109,20 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const message = urlParams.get('message');
+if (message) {
+    const messageContainer = document.getElementById('message-container');
+    if (messageContainer) {
+        messageContainer.textContent = decodeURIComponent(message).replace(/\+/g, ' ');
+        
+        // Define a classe da mensagem com base no conteúdo
+        if (message.toLowerCase().includes('sucesso') || message.toLowerCase().includes('aprovada') || message.toLowerCase().includes('cadastrado')) {
+            messageContainer.className = 'success';
+        } else {
+            messageContainer.className = 'error';
+        }
+        messageContainer.style.display = 'block';
+    }
+}

@@ -1,6 +1,8 @@
 <?php
-// Arquivo: login_admin.php
-session_start();
+// Arquivo: /kindact/php/login_admin.php
+include 'security.php';
+secure_session_start(); // Inicia a sessão de forma segura
+
 include 'db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -12,41 +14,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    try {
-        $stmt = $conn->prepare("SELECT admin_id, admin_senha FROM tb_admin WHERE admin_email = ?");
-        if (!$stmt) {
-            throw new Exception("Erro ao preparar a consulta.");
-        }
+    $stmt = $conn->prepare("SELECT admin_id, admin_senha FROM tb_admin WHERE admin_email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $admin = $result->fetch_assoc();
-            if (password_verify($senha, $admin['admin_senha'])) {
-                $_SESSION['user_id'] = $admin['admin_id'];
-                $_SESSION['user_type'] = 'admin';
-                // Redireciona para o novo dashboard do admin
-                header("Location: /kindact/main/admin_dashboard.php");
-                exit();
-            } else {
-                header("Location: /kindact/main/login.html?message=" . urlencode("Senha incorreta."));
-                exit();
-            }
-        } else {
-            header("Location: /kindact/main/login.html?message=" . urlencode("Email não encontrado."));
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        if (password_verify($senha, $admin['admin_senha'])) {
+            // Login bem-sucedido!
+            session_regenerate_id(true); // Regenera o ID da sessão após o login
+            $_SESSION['user_id'] = $admin['admin_id'];
+            $_SESSION['user_type'] = 'admin';
+            $_SESSION['initiated'] = true; // Confirma a inicialização segura
+            
+            header("Location: /kindact/main/admin_dashboard.php");
             exit();
         }
-
-        $stmt->close();
-    } catch (Exception $e) {
-        header("Location: /kindact/main/login.html?message=" . urlencode("Erro ao processar o login: " . $e->getMessage()));
-        exit();
     }
-} else {
-    header("Location: /kindact/main/login.html?message=" . urlencode("Método não permitido. Use POST."));
+    
+    // Se chegou aqui, o login falhou
+    header("Location: /kindact/main/login.html?message=" . urlencode("Email ou senha incorretos."));
     exit();
 }
-$conn->close();
 ?>

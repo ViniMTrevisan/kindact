@@ -1,13 +1,13 @@
 /* Importação de fontes */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* Variáveis de cores */
+/* Variáveis de Cores (Paleta Nova) */
 :root {
     --primary-color: #3498db;     /* Azul vibrante */
     --primary-dark: #2980b9;      /* Azul mais escuro para hover */
     --secondary-color: #2ecc71;   /* Verde para sucesso */
     --secondary-dark: #27ae60;    /* Verde mais escuro */
-    --background-color: #f0f2f5;  /* Cinza claro suave */
+    --background-color: #f0f2f5;  /* Cinza claro suave de fundo */
     --card-background: #ffffff;   /* Fundo branco para cards */
     --text-color: #333333;        /* Texto principal escuro */
     --text-light: #7f8c8d;        /* Texto secundário/leve */
@@ -32,12 +32,12 @@ body {
 
 .container {
     width: 90%;
-    max-width: 1000px; /* Um pouco mais estreito para foco no conteúdo */
+    max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
     background-color: var(--card-background);
     border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Sombra mais suave */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
 /* Header e Navegação */
@@ -225,12 +225,14 @@ form {
 .ong-list, .voluntario-list, .event-list, .candidatura-list {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .ong-item, .voluntario-item, .event-item, .candidatura-item {
     background: var(--card-background);
     padding: 20px;
-    margin-bottom: 15px;
     border-radius: 12px;
     border: 1px solid var(--border-color);
     display: flex;
@@ -244,13 +246,13 @@ form {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-.ong-item h3, .voluntario-item h4, .event-item h4 {
+.ong-item h3, .voluntario-item h4, .event-item h4, .candidatura-item h4 {
     font-size: 1.2rem;
     margin-bottom: 0;
     color: var(--primary-dark);
 }
 
-.ong-item p, .voluntario-item p, .event-item p {
+.ong-item p, .voluntario-item p, .event-item p, .candidatura-item p {
     font-size: 0.95rem;
     color: var(--text-light);
     margin-bottom: 0;
@@ -292,20 +294,21 @@ form {
     text-align: center;
     font-weight: 600;
     border-left: 5px solid;
-    display: none; /* Escondido por padrão */
+    display: none; /* Escondido por padrão, o JS o exibe */
 }
 
-#message-container[style*="green"] {
+#message-container.success {
     background-color: #e8f9f1;
     border-color: var(--secondary-color);
     color: #1b5e20;
 }
 
-#message-container[style*="red"] {
+#message-container.error {
     background-color: #fdeaea;
     border-color: var(--danger-color);
     color: #c62828;
 }
+
 
 /* Status Badges */
 .status-badge {
@@ -321,6 +324,7 @@ form {
 .status-pendente { background-color: #f39c12; }
 .status-contactado { background-color: #2ecc71; }
 .status-rejeitado { background-color: #e74c3c; }
+
 
 /* Rodapé */
 .footer {

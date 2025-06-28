@@ -1,73 +1,59 @@
 <?php
-// Arquivo: cadastro_admin.php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+include 'security.php';
+secure_session_start();
+
+// 1. Validação do Método e do Token CSRF
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !validate_csrf_token($_POST['csrf_token'] ?? '')) {
+    // Redireciona para o formulário com uma mensagem de erro genérica de segurança
+    header("Location: /kindact/main/form_cadastro_admin.php?message=" . urlencode("Erro de segurança ao processar sua solicitação. Tente novamente."));
+    exit();
+}
 
 include 'db_connect.php';
 
-if (!$conn) {
-    header("Location: /kindact/main/cadastro_admin.html?message=" . urlencode("Erro: Conexão com o banco de dados não estabelecida."));
+// 2. Validação dos Dados de Entrada
+$email = trim($_POST['email'] ?? '');
+$senha = $_POST['password'] ?? '';
+
+if (empty($email) || empty($senha)) {
+    header("Location: /kindact/main/form_cadastro_admin.php?message=" . urlencode("Email e senha são obrigatórios."));
     exit();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'] ?? '';
-    $senha = $_POST['password'] ?? '';
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    header("Location: /kindact/main/form_cadastro_admin.php?message=" . urlencode("O formato do email é inválido."));
+    exit();
+}
 
-    if (empty($email) || empty($senha)) {
-        header("Location: /kindact/main/cadastro_admin.html?message=" . urlencode("Email e senha são obrigatórios."));
-        exit();
-    }
+// 3. Verifica se o email já existe no banco
+$stmt = $conn->prepare("SELECT admin_id FROM tb_admin WHERE admin_email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    try {
-        $stmt = $conn->prepare("SELECT admin_id FROM tb_admin WHERE admin_email = ?");
-        if (!$stmt) {
-            throw new Exception("Erro ao preparar a consulta de verificação: " . $conn->error);
-        }
+if ($result->num_rows > 0) {
+    $stmt->close();
+    $conn->close();
+    header("Location: /kindact/main/form_cadastro_admin.php?message=" . urlencode("Este email já está cadastrado."));
+    exit();
+}
+$stmt->close();
 
-        $stmt->bind_param("s", $email);
-        if (!$stmt->execute()) {
-            throw new Exception("Erro ao executar a consulta de verificação: " . $stmt->error);
-        }
+// 4. Cria o Hash da Senha e Insere no Banco
+$senha_hash = password_hash($senha, PASSWORD_DEFAULT);
 
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $stmt->close();
-            header("Location: /kindact/main/cadastro_admin.html?message=" . urlencode("Email já cadastrado."));
-            exit();
-        }
-        $stmt->close();
+$stmt_insert = $conn->prepare("INSERT INTO tb_admin (admin_email, admin_senha) VALUES (?, ?)");
+$stmt_insert->bind_param("ss", $email, $senha_hash);
 
-        $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
-        if (!$senha_hash) {
-            throw new Exception("Erro ao gerar o hash da senha.");
-        }
-
-        $stmt = $conn->prepare("INSERT INTO tb_admin (admin_email, admin_senha) VALUES (?, ?)");
-        if (!$stmt) {
-            throw new Exception("Erro ao preparar a consulta de inserção: " . $conn->error);
-        }
-
-        $stmt->bind_param("ss", $email, $senha_hash);
-        if (!$stmt->execute()) {
-            throw new Exception("Erro ao executar a inserção: " . $stmt->error);
-        }
-
-        $stmt->close();
-        header("Location: /kindact/main/login.html?message=" . urlencode("Administrador cadastrado com sucesso! Faça login."));
-        exit();
-    } catch (Exception $e) {
-        if (isset($stmt) && $stmt instanceof mysqli_stmt) {
-            $stmt->close();
-        }
-        header("Location: /kindact/main/cadastro_admin.html?message=" . urlencode("Erro: " . $e->getMessage()));
-        exit();
-    }
+if ($stmt_insert->execute()) {
+    // Sucesso: Redireciona para a página de login com mensagem de sucesso
+    header("Location: /kindact/main/login.html?message=" . urlencode("Administrador cadastrado com sucesso! Faça o login."));
 } else {
-    header("Location: /kindact/main/cadastro_admin.html?message=" . urlencode("Método não permitido. Use POST."));
-    exit();
+    // Falha: Redireciona de volta ao formulário com mensagem de erro
+    header("Location: /kindact/main/form_cadastro_admin.php?message=" . urlencode("Ocorreu um erro ao tentar realizar o cadastro. Tente novamente."));
 }
 
+$stmt_insert->close();
 $conn->close();
+exit();
 ?>
