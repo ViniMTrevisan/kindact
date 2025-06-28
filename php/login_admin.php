@@ -1,18 +1,14 @@
 <?php
+// Arquivo: login_admin.php
 session_start();
 include 'db_connect.php';
-
-if ($conn->connect_error) {
-    header("Location: /kindact/main/login_admin.html?message=Erro%20de%20conexão%20com%20o%20banco%20de%20dados.");
-    exit();
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'] ?? '';
     $senha = $_POST['password'] ?? '';
 
     if (empty($email) || empty($senha)) {
-        header("Location: /kindact/main/login_admin.html?message=Email%20e%20senha%20são%20obrigatórios.");
+        header("Location: /kindact/main/login.html?message=" . urlencode("Email e senha são obrigatórios."));
         exit();
     }
 
@@ -31,24 +27,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (password_verify($senha, $admin['admin_senha'])) {
                 $_SESSION['user_id'] = $admin['admin_id'];
                 $_SESSION['user_type'] = 'admin';
-                header("Location: /kindact/main/admin_tela.html");
+                // Redireciona para o novo dashboard do admin
+                header("Location: /kindact/main/admin_dashboard.php");
                 exit();
             } else {
-                header("Location: /kindact/main/login_admin.html?message=Senha%20incorreta.");
+                header("Location: /kindact/main/login.html?message=" . urlencode("Senha incorreta."));
                 exit();
             }
         } else {
-            header("Location: /kindact/main/login_admin.html?message=Email%20não%20encontrado.");
+            header("Location: /kindact/main/login.html?message=" . urlencode("Email não encontrado."));
             exit();
         }
 
         $stmt->close();
     } catch (Exception $e) {
-        header("Location: /kindact/main/login_admin.html?message=Erro%20ao%20processar%20o%20login:%20" . urlencode($e->getMessage()));
+        header("Location: /kindact/main/login.html?message=" . urlencode("Erro ao processar o login: " . $e->getMessage()));
         exit();
     }
 } else {
-    header("Location: /kindact/main/login_admin.html?message=Método%20não%20permitido.%20Use%20POST.");
+    header("Location: /kindact/main/login.html?message=" . urlencode("Método não permitido. Use POST."));
     exit();
 }
 $conn->close();

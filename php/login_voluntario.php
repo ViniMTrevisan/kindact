@@ -1,4 +1,5 @@
 <?php
+// Arquivo: login_voluntario.php
 session_start();
 include 'db_connect.php';
 
@@ -7,7 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $senha = $_POST['password'] ?? '';
 
     if (empty($email) || empty($senha)) {
-        die("Email e senha são obrigatórios.");
+        header("Location: /kindact/main/login.html?message=" . urlencode("Email e senha são obrigatórios."));
+        exit();
     }
 
     $stmt = $conn->prepare("SELECT voluntario_id, voluntario_senha FROM tb_voluntario WHERE voluntario_email = ?");
@@ -20,19 +22,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($senha, $voluntario['voluntario_senha'])) {
             $_SESSION['user_id'] = $voluntario['voluntario_id'];
             $_SESSION['user_type'] = 'voluntario';
-            header("Location: /kindact/main/usuario.html");
+            // Redireciona para o novo dashboard do voluntário
+            header("Location: /kindact/main/voluntario_dashboard.php");
             exit();
         } else {
-            echo "Senha incorreta.";
+            header("Location: /kindact/main/login.html?message=" . urlencode("Senha incorreta."));
+            exit();
         }
     } else {
-        echo "Email não encontrado.";
+        header("Location: /kindact/main/login.html?message=" . urlencode("Email não encontrado."));
+        exit();
     }
 
     $stmt->close();
 } else {
-    http_response_code(405);
-    echo "Método não permitido. Use POST.";
+    header("Location: /kindact/main/login.html?message=" . urlencode("Método não permitido. Use POST."));
+    exit();
 }
 $conn->close();
 ?>

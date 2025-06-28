@@ -1,4 +1,5 @@
 <?php
+// Arquivo: login_ong.php
 session_start();
 include 'db_connect.php';
 
@@ -7,7 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $senha = $_POST['password'] ?? '';
 
     if (empty($email) || empty($senha)) {
-        die("Email e senha são obrigatórios.");
+        header("Location: /kindact/main/login.html?message=" . urlencode("Email e senha são obrigatórios."));
+        exit();
     }
 
     $stmt = $conn->prepare("SELECT ong_id, ong_senha, aprovado FROM tb_ong WHERE ong_email = ?");
@@ -18,24 +20,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $ong = $result->fetch_assoc();
         if ($ong['aprovado'] == 0) {
-            die("Sua ONG ainda não foi aprovada pelo administrador.");
+            header("Location: /kindact/main/login.html?message=" . urlencode("Sua ONG ainda não foi aprovada pelo administrador."));
+            exit();
         }
         if (password_verify($senha, $ong['ong_senha'])) {
             $_SESSION['user_id'] = $ong['ong_id'];
             $_SESSION['user_type'] = 'ong';
-            header("Location: /kindact/main/publicacao_ong.php");
+            // Redireciona para o novo dashboard da ONG
+            header("Location: /kindact/main/ong_dashboard.php");
             exit();
         } else {
-            echo "Senha incorreta.";
+            header("Location: /kindact/main/login.html?message=" . urlencode("Senha incorreta."));
+            exit();
         }
     } else {
-        echo "Email não encontrado.";
+        header("Location: /kindact/main/login.html?message=" . urlencode("Email não encontrado."));
+        exit();
     }
 
     $stmt->close();
 } else {
-    http_response_code(405);
-    echo "Método não permitido. Use POST.";
+    header("Location: /kindact/main/login.html?message=" . urlencode("Método não permitido. Use POST."));
+    exit();
 }
 $conn->close();
 ?>

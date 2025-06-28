@@ -1,11 +1,12 @@
 <?php
+// Arquivo: processar_contato.php
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'ong') {
-    header("Location: /kindact/main/login_ong.html");
+    header("Location: /kindact/main/login.html?message=" . urlencode("Acesso não autorizado."));
     exit();
 }
 
@@ -16,23 +17,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ong_id = $_SESSION['user_id'];
 
     if (empty($voluntario_id)) {
-        die("ID do voluntário não fornecido.");
+        header("Location: /kindact/main/ong_dashboard.php?message=" . urlencode("ID do voluntário não fornecido."));
+        exit();
     }
 
+    // Altera o status da candidatura para 'contactado'
     $stmt = $conn->prepare("UPDATE tb_candidatura SET status = 'contactado' WHERE fk_voluntario_id = ? AND fk_ong_id = ?");
     $stmt->bind_param("ii", $voluntario_id, $ong_id);
 
     if ($stmt->execute()) {
-        header("Location: /kindact/main/contato_confirmado.html");
+        header("Location: /kindact/main/ong_dashboard.php?message=" . urlencode("Voluntário contactado com sucesso!"));
         exit();
     } else {
-        echo "Erro ao processar contato.";
+        header("Location: /kindact/main/ong_dashboard.php?message=" . urlencode("Erro ao processar contato."));
+        exit();
     }
 
     $stmt->close();
 } else {
-    http_response_code(405);
-    echo "Método não permitido. Use POST.";
+    header("Location: /kindact/main/ong_dashboard.php?message=" . urlencode("Método não permitido. Use POST."));
+    exit();
 }
 $conn->close();
 ?>
