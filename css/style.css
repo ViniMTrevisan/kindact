@@ -399,3 +399,50 @@ form {
         font-size: 1.7rem;
     }
 }
+
+/* Adicionar ao final de style.css?v=1.1 */
+
+/* Links extras no formulário de login */
+.extra-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.extra-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.extra-links a:hover {
+    text-decoration: underline;
+}
+
+/* Formulário de Filtros */
+.filter-form {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.filter-form .form-group {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.filter-form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.filter-form .btn {
+    height: 48px; /* Alinha altura com o select */
+}
