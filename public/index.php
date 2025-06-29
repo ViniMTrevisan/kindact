@@ -48,7 +48,10 @@ if (!file_exists($view_path)) {
 }
 
 require __DIR__ . '/../src/views/partials/header.php';
+// Adiciona o container para o conteúdo principal da página
+echo '<div class="container">';
 echo $content;
+echo '</div>';
 require __DIR__ . '/../src/views/partials/footer.php';
 
 if (isset($conn) && $conn instanceof mysqli) $conn->close();
