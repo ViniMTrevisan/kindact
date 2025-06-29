@@ -1,5 +1,4 @@
 <?php
-// /src/views/ong_dashboard.php
 require_auth('ong');
 $page_title = "Dashboard da ONG";
 $ong_id = $_SESSION['user_id'];

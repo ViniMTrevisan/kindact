@@ -1,5 +1,4 @@
 <?php
-// /src/views/login_admin.php
 $page_title = "Login do Administrador";
 ?>
 

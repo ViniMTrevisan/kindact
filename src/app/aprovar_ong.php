@@ -21,7 +21,6 @@ $stmt = $conn->prepare("UPDATE tb_ong SET aprovado = 1 WHERE ong_id = ?");
 $stmt->bind_param("i", $ong_id);
 
 if ($stmt->execute() && $stmt->affected_rows > 0) {
-    // TODO: Adicionar lógica para notificar a ONG por e-mail que ela foi aprovada.
     header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("ONG aprovada com sucesso."));
 } else {
     header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Erro ao aprovar a ONG ou ela já estava aprovada."));

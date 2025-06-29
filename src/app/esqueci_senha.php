@@ -15,7 +15,6 @@ if (!$email) {
     exit();
 }
 
-// Para não revelar quais emails existem, sempre mostramos a mesma mensagem de sucesso.
 $success_message = "Se um e-mail correspondente for encontrado em nosso sistema, um link de recuperação será enviado.";
 
 $stmt = $conn->prepare("SELECT email FROM ((SELECT ong_email as email FROM tb_ong WHERE ong_email = ?) UNION (SELECT voluntario_email as email FROM tb_voluntario WHERE voluntario_email = ?) UNION (SELECT admin_email as email FROM tb_admin WHERE admin_email = ?)) as user_emails");
@@ -30,10 +29,6 @@ if ($stmt->get_result()->num_rows > 0) {
     $stmt_insert = $conn->prepare("INSERT INTO tb_password_resets (user_email, token, expires_at) VALUES (?, ?, ?)");
     $stmt_insert->bind_param("sss", $email, $token, $expires_at);
     $stmt_insert->execute();
-    
-    // TODO: Adicionar lógica real de envio de email aqui com uma biblioteca como PHPMailer
-    // $reset_link = "http://localhost/kindact/public/index.php?page=form_redefinir_senha&token=" . $token;
-    // mail($email, "Redefinição de Senha - KindAct", "Clique aqui para redefinir sua senha: " . $reset_link);
 }
 
 header("Location: /kindact/public/index.php?page=login&message=" . urlencode($success_message));

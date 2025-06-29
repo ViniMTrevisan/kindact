@@ -1,5 +1,4 @@
 <?php
-// /src/views/index.php (VERSÃO ATUALIZADA SEM O BOTÃO DE LOGIN)
 $page_title = "Página Inicial";
 ?>
 

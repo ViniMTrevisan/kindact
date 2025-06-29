@@ -1,5 +1,4 @@
 <?php
-// /src/views/form_esqueci_senha.php
 $page_title = "Recuperar Senha";
 ?>
 <a href="/kindact/public/index.php?page=login" class="back-link">< Voltar para o Login</a>

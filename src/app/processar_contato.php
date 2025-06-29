@@ -19,12 +19,10 @@ if (!$voluntario_id || !$evento_id) {
     exit();
 }
 
-// Atualiza o status da candidatura para 'contactado'
 $stmt = $conn->prepare("UPDATE tb_candidatura SET status = 'contactado' WHERE fk_voluntario_id = ? AND fk_evento_id IN (SELECT evento_id FROM tb_evento WHERE evento_id = ? AND fk_ong_id = ?)");
 $stmt->bind_param("iii", $voluntario_id, $evento_id, $ong_id);
 
 if ($stmt->execute() && $stmt->affected_rows > 0) {
-    // TODO: Adicionar lógica de notificação por email para o voluntário aqui.
     header("Location: /kindact/public/index.php?page=gerenciar_candidatos&evento_id={$evento_id}&message=" . urlencode("Voluntário marcado como contactado!"));
 } else {
     header("Location: /kindact/public/index.php?page=gerenciar_candidatos&evento_id={$evento_id}&message=" . urlencode("Erro ao processar o contato."));

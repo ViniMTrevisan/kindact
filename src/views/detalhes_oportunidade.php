@@ -1,5 +1,4 @@
 <?php
-// /src/views/detalhes_oportunidade.php
 require_auth('voluntario');
 $page_title = "Detalhes da Oportunidade";
 

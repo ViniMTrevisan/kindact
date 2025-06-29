@@ -1,7 +1,5 @@
 <?php
-// /src/views/form_redefinir_senha.php
 $page_title = "Redefinir Senha";
-// Pega o token da URL de forma segura
 $token = $_GET['token'] ?? '';
 ?>
 <h2>Crie sua Nova Senha</h2>

@@ -1,5 +1,4 @@
 <?php
-// /src/views/politica_privacidade.php
 $page_title = "Política de Privacidade";
 ?>
 

@@ -42,20 +42,16 @@ if (!in_array($page, $allowed_pages)) {
 
 $view_path = __DIR__ . '/../src/views/' . $page . '.php';
 
-// Define um título padrão
 $page_title = ucfirst(str_replace('_', ' ', $page));
 
-// Inclui o cabeçalho
 require __DIR__ . '/../src/views/partials/header.php';
 
-// Inclui o conteúdo da página específica
 if (file_exists($view_path)) {
     require $view_path;
 } else {
     echo "<h2>Erro 404: Página não encontrada</h2>";
 }
 
-// Inclui o rodapé
 require __DIR__ . '/../src/views/partials/footer.php';
 
 if (isset($conn) && $conn instanceof mysqli) {

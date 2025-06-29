@@ -1,5 +1,4 @@
 <?php
-// /src/views/termos.php
 $page_title = "Termos de Uso";
 ?>
 

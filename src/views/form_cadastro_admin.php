@@ -1,5 +1,4 @@
 <?php
-// /src/views/form_cadastro_admin.php
 $page_title = "Cadastro de Administrador";
 ?>
 <a href="/kindact/public/index.php?page=login" class="back-link">< Voltar</a>

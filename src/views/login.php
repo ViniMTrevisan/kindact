@@ -1,5 +1,4 @@
 <?php
-// /src/views/login.php
 $page_title = "Login";
 ?>
 

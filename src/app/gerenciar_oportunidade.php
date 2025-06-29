@@ -1,8 +1,4 @@
 \<?php
-// /src/app/gerenciar_oportunidade.php
-
-// O roteador já iniciou a sessão e a conexão com o banco.
-// Aqui, apenas garantimos a autorização e processamos a lógica.
 require_auth('ong');
 
 if (!validate_csrf_token($_POST['csrf_token'] ?? '')) {

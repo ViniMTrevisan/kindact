@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-
-    // 1. Exibição de mensagens de feedback da URL
     const urlParams = new URLSearchParams(window.location.search);
     const message = urlParams.get('message');
     if (message) {
@@ -15,8 +13,6 @@ document.addEventListener("DOMContentLoaded", function() {
             messageContainer.style.display = 'block';
         }
     }
-
-    // 2. Confirmação de remoção de itens
     const removeButtons = document.querySelectorAll(".remover");
     removeButtons.forEach(button => {
         button.addEventListener("click", function(event) {
@@ -26,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 3. Barra de pesquisa dinâmica para listas
     const listsToSearch = document.querySelectorAll(".ong-list, .voluntario-list, .event-list, .opportunity-list");
     listsToSearch.forEach(list => {
         if (list) {
@@ -35,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function() {
             searchInput.placeholder = "Pesquisar na lista...";
             searchInput.className = "search-input";
             
-            // Insere a barra de pesquisa antes da lista
             list.parentElement.insertBefore(searchInput, list);
 
             const items = list.querySelectorAll(".ong-item, .voluntario-item, .event-item");
@@ -45,9 +39,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 items.forEach(item => {
                     const textContent = item.textContent.toLowerCase();
                     if (textContent.includes(filter)) {
-                        item.style.display = ""; // Mostra o item
+                        item.style.display = ""; 
                     } else {
-                        item.style.display = "none"; // Esconde o item
+                        item.style.display = "none"; 
                     }
                 });
             });

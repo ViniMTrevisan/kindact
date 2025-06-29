@@ -1,17 +1,14 @@
-\<?php
-// /src/views/gerenciar_oportunidade.php
-require_auth('ong'); // Garante que apenas ONGs logadas acessem
+<?php
+require_auth('ong'); 
 $page_title = "Gerenciar Oportunidade";
 $ong_id = $_SESSION['user_id'];
 
-// Valida o ID do evento pego da URL
 $evento_id = filter_input(INPUT_GET, 'evento_id', FILTER_VALIDATE_INT);
 if (!$evento_id) {
     header("Location: /kindact/public/index.php?page=ong_dashboard&message=" . urlencode("Oportunidade inválida."));
     exit();
 }
 
-// Busca os dados do evento para preencher o formulário, garantindo que o evento pertence à ONG logada
 $stmt = $conn->prepare("SELECT * FROM tb_evento WHERE evento_id = ? AND fk_ong_id = ?");
 $stmt->bind_param("ii", $evento_id, $ong_id);
 $stmt->execute();
