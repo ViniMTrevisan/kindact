@@ -2,6 +2,9 @@
 // /src/views/login.php
 $page_title = "Login";
 ?>
+
+<a href="/kindact/public/" class="back-link">< Voltar para a Página Inicial</a>
+
 <h2>Acesse sua conta</h2>
 <div id="message-container"></div>
 

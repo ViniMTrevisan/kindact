@@ -1,10 +1,11 @@
 <?php
-// /public/index.php
+// /public/index.php (VERSÃO SIMPLIFICADA E CORRIGIDA)
+
 require_once __DIR__ . '/../src/core/security.php';
 secure_session_start();
 require_once __DIR__ . '/../src/core/db_connect.php';
 
-// ROTEADOR DE AÇÕES (POST)
+// ROTEADOR DE AÇÕES (POST) - Esta parte não muda
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action'])) {
     $action = $_POST['action'];
     $allowed_actions = [
@@ -23,7 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action'])) {
     }
 }
 
-// ROTEADOR DE PÁGINAS (GET)
+
+// ROTEADOR DE PÁGINAS (GET) - Lógica simplificada
 $page = $_GET['page'] ?? 'index';
 $allowed_pages = [
     'index', 'login', 'login_admin', 'termos', 'politica_privacidade',
@@ -34,25 +36,29 @@ $allowed_pages = [
     'gerenciar_oportunidade', 'minhas_candidaturas'
 ];
 
-if (!in_array($page, $allowed_pages)) $page = 'index';
-$view_path = __DIR__ . '/../src/views/' . $page . '.php';
-
-if (!file_exists($view_path)) {
-    http_response_code(404);
-    $page_title = "Erro 404";
-    $content = "<h2>Erro 404</h2><p>Página não encontrada.</p>";
-} else {
-    ob_start();
-    require $view_path;
-    $content = ob_get_clean();
+if (!in_array($page, $allowed_pages)) {
+    $page = 'index';
 }
 
+$view_path = __DIR__ . '/../src/views/' . $page . '.php';
+
+// Define um título padrão
+$page_title = ucfirst(str_replace('_', ' ', $page));
+
+// Inclui o cabeçalho
 require __DIR__ . '/../src/views/partials/header.php';
-// Adiciona o container para o conteúdo principal da página
-echo '<div class="container">';
-echo $content;
-echo '</div>';
+
+// Inclui o conteúdo da página específica
+if (file_exists($view_path)) {
+    require $view_path;
+} else {
+    echo "<h2>Erro 404: Página não encontrada</h2>";
+}
+
+// Inclui o rodapé
 require __DIR__ . '/../src/views/partials/footer.php';
 
-if (isset($conn) && $conn instanceof mysqli) $conn->close();
+if (isset($conn) && $conn instanceof mysqli) {
+    $conn->close();
+}
 ?>
