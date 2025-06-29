@@ -1,21 +1,18 @@
 <?php
-// Arquivo: /kindact/php/remover_ong.php
-include 'security.php';
+require_once __DIR__ . '/../core/security.php';
 secure_session_start();
 require_auth('admin');
 
-// Validação do Token CSRF
 if ($_SERVER["REQUEST_METHOD"] !== "POST" || !validate_csrf_token($_POST['csrf_token'] ?? '')) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("Erro de segurança ou requisição inválida."));
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Erro de segurança."));
     exit();
 }
 
-include 'db_connect.php';
+require_once __DIR__ . '/../core/db_connect.php';
+$ong_id = filter_input(INPUT_POST, 'ong_id', FILTER_VALIDATE_INT);
 
-$ong_id = $_POST['ong_id'] ?? '';
-
-if (empty($ong_id)) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("ID da ONG não fornecido."));
+if (!$ong_id) {
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("ID da ONG inválido."));
     exit();
 }
 
@@ -23,12 +20,9 @@ $stmt = $conn->prepare("DELETE FROM tb_ong WHERE ong_id = ?");
 $stmt->bind_param("i", $ong_id);
 
 if ($stmt->execute()) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("ONG removida com sucesso."));
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("ONG removida com sucesso."));
 } else {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("Erro ao remover ONG."));
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Erro ao remover ONG."));
 }
-
-$stmt->close();
-$conn->close();
 exit();
 ?>

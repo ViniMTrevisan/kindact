@@ -1,32 +1,30 @@
 <?php
-// Arquivo: /kindact/php/aprovar_ong.php
-include 'security.php';
+require_once __DIR__ . '/../core/security.php';
 secure_session_start();
 require_auth('admin');
 
-// Validação do Token CSRF
 if ($_SERVER["REQUEST_METHOD"] !== "POST" || !validate_csrf_token($_POST['csrf_token'] ?? '')) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("Erro de segurança ou requisição inválida."));
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Erro de segurança ou requisição inválida."));
     exit();
 }
 
-include 'db_connect.php';
+require_once __DIR__ . '/../core/db_connect.php';
 
-$ong_id = $_POST['ong_id'] ?? '';
+$ong_id = filter_input(INPUT_POST, 'ong_id', FILTER_VALIDATE_INT);
 
-if (empty($ong_id)) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("ID da ONG não fornecido."));
+if (!$ong_id) {
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("ID da ONG inválido."));
     exit();
 }
 
-// Usar consultas preparadas para segurança
 $stmt = $conn->prepare("UPDATE tb_ong SET aprovado = 1 WHERE ong_id = ?");
 $stmt->bind_param("i", $ong_id);
 
-if ($stmt->execute()) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("ONG aprovada com sucesso."));
+if ($stmt->execute() && $stmt->affected_rows > 0) {
+    // TODO: Adicionar lógica para notificar a ONG por e-mail que ela foi aprovada.
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("ONG aprovada com sucesso."));
 } else {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("Erro ao aprovar ONG."));
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Erro ao aprovar a ONG ou ela já estava aprovada."));
 }
 
 $stmt->close();

@@ -4,8 +4,13 @@ require_once __DIR__ . '/../core/db_connect.php';
 secure_session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'] ?? '';
+    $email = trim($_POST['email'] ?? '');
     $senha = $_POST['password'] ?? '';
+
+    if (empty($email) || empty($senha)) {
+        header("Location: /kindact/public/index.php?page=login&message=" . urlencode("Email e senha são obrigatórios."));
+        exit();
+    }
 
     $stmt = $conn->prepare("SELECT voluntario_id, voluntario_senha FROM tb_voluntario WHERE voluntario_email = ?");
     $stmt->bind_param("s", $email);
@@ -23,7 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
+    
     header("Location: /kindact/public/index.php?page=login&message=" . urlencode("Email ou senha incorretos."));
     exit();
 }
+header("Location: /kindact/public/");
+exit();
 ?>

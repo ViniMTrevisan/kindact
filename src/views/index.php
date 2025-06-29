@@ -9,15 +9,17 @@ $page_title = "Página Inicial";
 
 <section class="tela">
     <h2>Comece Agora</h2>
-    <div class="profile-options" style="display: flex; justify-content: center; gap: 1rem;">
-        <a href="/kindact/public/index.php?page=form_cadastro_voluntario" class="btn btn-primary">Sou Voluntário</a>
-        <a href="/kindact/public/index.php?page=form_cadastro_ong" class="btn btn-primary">Sou uma ONG</a>
+    <p>Crie sua conta e faça parte da nossa comunidade.</p>
+    <div class="profile-options" style="display: flex; justify-content: center; gap: 1rem; margin-top: 15px;">
+        <a href="/kindact/public/index.php?page=form_cadastro_voluntario" class="btn btn-primary">Quero ser Voluntário</a>
+        <a href="/kindact/public/index.php?page=form_cadastro_ong" class="btn btn-primary">Quero cadastrar minha ONG</a>
     </div>
 </section>
 
-<section class="ajudar">
+<section class="ajudar" style="margin-top: 40px;">
     <h2>Já tem conta?</h2>
-    <div class="login-options" style="display: flex; justify-content: center;">
-        <a href="/kindact/public/index.php?page=login" class="btn btn-primary">Fazer Login</a>
+    <p>Faça login para continuar sua jornada e gerenciar suas atividades.</p>
+    <div class="login-options" style="display: flex; justify-content: center; margin-top: 15px;">
+        <a href="/kindact/public/index.php?page=login" class="btn btn-secondary">Fazer Login</a>
     </div>
 </section>

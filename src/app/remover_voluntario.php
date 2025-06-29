@@ -1,17 +1,18 @@
 <?php
-// Arquivo: remover_voluntario.php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: /kindact/main/login.html?message=" . urlencode("Acesso não autorizado."));
+require_once __DIR__ . '/../core/security.php';
+secure_session_start();
+require_auth('admin');
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !validate_csrf_token($_POST['csrf_token'] ?? '')) {
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Erro de segurança."));
     exit();
 }
 
-include 'db_connect.php';
+require_once __DIR__ . '/../core/db_connect.php';
+$voluntario_id = filter_input(INPUT_POST, 'voluntario_id', FILTER_VALIDATE_INT);
 
-$voluntario_id = $_GET['voluntario_id'] ?? '';
-
-if (empty($voluntario_id)) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("ID do voluntário não fornecido."));
+if (!$voluntario_id) {
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("ID de voluntário inválido."));
     exit();
 }
 
@@ -19,13 +20,9 @@ $stmt = $conn->prepare("DELETE FROM tb_voluntario WHERE voluntario_id = ?");
 $stmt->bind_param("i", $voluntario_id);
 
 if ($stmt->execute()) {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("Voluntário removido com sucesso."));
-    exit();
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Voluntário removido com sucesso."));
 } else {
-    header("Location: /kindact/main/admin_dashboard.php?message=" . urlencode("Erro ao remover voluntário."));
-    exit();
+    header("Location: /kindact/public/index.php?page=admin_dashboard&message=" . urlencode("Erro ao remover voluntário."));
 }
-
-$stmt->close();
-$conn->close();
+exit();
 ?>
