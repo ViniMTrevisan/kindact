@@ -51,7 +51,6 @@ A plataforma foi construída com três níveis de acesso distintos, cada um com 
 * Dashboard de administração.
 * Sistema de aprovação de novas ONGs, liberando-as para usar a plataforma.
 * Gerenciamento de usuários, com a capacidade de remover ONGs e Voluntários do sistema.
-* (Opcional) Capacidade de criar novos administradores a partir do painel.
 
 ---
 
