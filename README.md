@@ -2,7 +2,7 @@
 
 * **LinkedIn** - [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7344990253033664512/)
 
-## Demonstração em Vídeo - CLIQUE AQUI!
+## Demonstração em Vídeo - CLIQUE NA IMAGEM!
 
 [![Assista à demonstração do KindAct em vídeo](/public/assets/Captura%20de%20Tela%202025-06-29%20às%2004.22.40.png)](https://youtu.be/rszk96KI3N4?si=AqUwRi7E2HOJCGUq)
 
