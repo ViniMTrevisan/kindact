@@ -4,7 +4,7 @@
 
 ## Demonstração em Vídeo - CLIQUE AQUI!
 
-[![Assista à demonstração do KindAct em vídeo](/public/assets/Captura%20de%20Tela%202025-06-29%20às%2004.22.40.png)]()
+[![Assista à demonstração do KindAct em vídeo](/public/assets/Captura%20de%20Tela%202025-06-29%20às%2004.22.40.png)](https://youtu.be/rszk96KI3N4?si=AqUwRi7E2HOJCGUq)
 
 *Clique na imagem acima para ver uma demonstração completa da plataforma em ação!*
 
